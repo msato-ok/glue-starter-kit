@@ -1,0 +1,13 @@
+AWS_REGION=ap-northeast-1
+AWS_OUTPUT=json
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+
+# for awslocal
+LOCALSTACK_HOST=localstack
+EDGE_PORT=4566
+USE_SSL=false
+DEFAULT_REGION=ap-northeast-1
+
+# s3 test
+S3_ENDPOINT_URL=http://localstack:4566
