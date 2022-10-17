@@ -1,16 +1,8 @@
 {
   "recommendations": [
-    // jupyterlab
-    "ms-toolsai.jupyter",
-    // markdown
-    "yzhang.markdown-all-in-one",
-    // markdown mermaid.js
-    "bierner.markdown-mermaid",
-    // excel to markdown table
-    "csholmq.excel-to-markdown-table",
-    // gitlens
-    "eamodio.gitlens",
-    // editorconfig
-    "editorconfig.editorconfig"
+    "ms-python.python",
+    "editorconfig.editorconfig",
+    "ms-azuretools.vscode-docker",
+    "ms-vscode.makefile-tools"
   ]
 }

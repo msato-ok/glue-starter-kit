@@ -37,6 +37,7 @@ services:
     ports:
       - "4040:4040"
       - "8888:8888"
+      - "18080:18080"
     command: /home/glue_user/jupyter/jupyter_start.sh
     networks:
       - glue_network
@@ -47,12 +48,6 @@ services:
     environment:
       - SERVICES=s3
       - DEBUG=1
-      # - DATA_DIR=/tmp/localstack
-      # - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
-      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      # - AWS_DEFAULT_REGION=ap-northeast-1
-      # - AWS_DEFAULT_OUTPUT=json
     env_file:
       - ./.envs/.aws
     ports:
@@ -61,6 +56,5 @@ services:
     volumes:
       - .:/app:z
       - ./docker/localstack/docker-entrypoint-initaws.d:/docker-entrypoint-initaws.d
-      # - local_localstack_data:/tmp/localstack
     networks:
       - glue_network

@@ -1,21 +1,26 @@
+import logging
 import os
 import sys
 
 from awsglue.context import GlueContext
+from awsglue.dynamicframe import DynamicFrame
 from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
-from pyspark.sql import SparkSession
+from pyspark.context import SparkContext
+from pyspark.sql import DataFrame, SparkSession
+
+logger = logging.getLogger(__name__)
 
 
-class GluePythonSampleTest:
-    def __init__(self):
+class GluePythonSample:
+    def __init__(self) -> None:
         params = []
         if "--JOB_NAME" in sys.argv:
             params.append("JOB_NAME")
         args = getResolvedOptions(sys.argv, params)
 
         sc = SparkSession.builder.getOrCreate()
-        self.context = GlueContext(sc)
+        self.context = GlueContext(SparkContext.getOrCreate())
         self.job = Job(self.context)
 
         s3_endpoint_url = os.getenv("S3_ENDPOINT_URL")
@@ -32,49 +37,28 @@ class GluePythonSampleTest:
             jobname = "test"
         self.job.init(jobname, args)
 
-    def run(self):
-        dyf = read_csv(
-            self.context, "s3://test-bucket/examples/us-legislators/all/tokyo.csv"
-        )
-        dyf.printSchema()
-        df = dyf.toDF()
-
-        df = do_matching(self.context, df)
-        df.show()
-        write_parquet(df, "s3://test-bucket/output")
+    def run(self) -> None:
+        dyf = read_csv(self.context, "s3://test-bucket/data/person.csv")
+        df = execute_query(self.context, dyf.toDF())
+        write_parquet(self.context, df, "s3://test-bucket/parquet")
 
         self.job.commit()
 
 
-def do_matching(glue_context, df):
-    glue_context.get_logger().info("do_matching")
-    df.createOrReplaceTempView("tokyo")
-    df = glue_context.spark_session.sql(
-        """
-        SELECT
-            *
-        FROM
-            tokyo
-        ORDER BY
-            listing_title_kana
-        """
-    )
-
-    return df
-
-
-def read_csv(glue_context, path):
-    print(f"read_csv: {path}")
+def read_csv(glue_context: GlueContext, path: str) -> DynamicFrame:
     dynamicframe = glue_context.create_dynamic_frame.from_options(
         connection_type="s3",
         connection_options={"paths": [path]},
         format="csv",
-        format_options={"withHeader": True, "separator": ","},
+        format_options={
+            "withHeader": True,
+            # "optimizePerformance": True,
+        },
     )
     return dynamicframe
 
 
-def write_parquet(df, path):
+def write_parquet(glue_context: GlueContext, df: DataFrame, path: str) -> None:
     print(f"write_parquet: {path}")
     (
         df.write.mode("overwrite").format("parquet")
@@ -83,5 +67,22 @@ def write_parquet(df, path):
     )
 
 
+def execute_query(glue_context: GlueContext, df: DataFrame) -> DataFrame:
+    glue_context.get_logger().info("execute_query")
+    df.createOrReplaceTempView("person")
+    df = glue_context.spark_session.sql(
+        """
+        SELECT
+            *
+        FROM
+            person
+        ORDER BY
+            uid
+        """
+    )
+
+    return df
+
+
 if __name__ == "__main__":
-    GluePythonSampleTest().run()
+    GluePythonSample().run()

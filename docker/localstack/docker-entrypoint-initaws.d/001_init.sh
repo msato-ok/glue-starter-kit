@@ -7,5 +7,5 @@ S3_URL=s3://$S3_BUCKET
 awslocal s3 mb $S3_URL
 
 # テストファイルを配置
-DATA_DIR=/docker-entrypoint-initaws.d
-awslocal s3 cp $DATA_DIR/tokyo.csv $S3_URL/examples/us-legislators/all/
+DATA_DIR=/app/fixtures/it
+awslocal s3 cp --recursive $DATA_DIR/ $S3_URL/data/

@@ -1,3 +1,5 @@
+from typing import List
+
 """
 AWS Glue Local Kit
 """
@@ -6,4 +8,4 @@ __version__ = "0.0.1"
 __version_info__ = tuple([int(num) for num in __version__.split(".")])
 
 
-__all__: list[str] = []
+__all__: List[str] = []

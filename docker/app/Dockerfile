@@ -68,6 +68,10 @@ RUN git clone https://github.com/awslabs/aws-glue-libs.git -b master --depth 1 \
 # make develop owner of the WORKDIR directory as well.
 RUN chown -R $USERNAME:$USERNAME ${APP_HOME}
 
+# copy alias for glue
+COPY docker/app/.bash_aliases /home/$USERNAME/
+RUN chown $USERNAME:$USERNAME /home/$USERNAME/.bash_aliases
+
 USER $USERNAME
 
 # Install poetry

@@ -6,11 +6,11 @@ from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
 from pyspark.sql import SparkSession
 
-from src import sample
+from src.glue_starter_kit import app
 
 
 @pytest.fixture(scope="module", autouse=True)
-def glue_context():
+def glue_context() -> GlueContext:
     sys.argv.append("--JOB_NAME")
     sys.argv.append("test_job")
 
@@ -32,27 +32,20 @@ def glue_context():
     job.commit()
 
 
-def test_counts(glue_context):
-    dyf = sample.read_csv(
-        glue_context, "s3://test-bucket/examples/us-legislators/all/tokyo.csv"
-    )
+def test_counts(glue_context: GlueContext) -> None:
+    dyf = app.read_csv(glue_context, "s3://test-bucket/data/person.csv")
     dyf.printSchema()
-    assert dyf.toDF().count() == 10000
+    assert dyf.toDF().count() == 100
 
 
-def test_do_matching(glue_context):
-    dyf = sample.read_csv(
-        glue_context, "s3://test-bucket/examples/us-legislators/all/tokyo.csv"
-    )
+def test_execute_query(glue_context: GlueContext) -> None:
+    dyf = app.read_csv(glue_context, "s3://test-bucket/data/person.csv")
     dyf.printSchema()
-    df = sample.do_matching(glue_context, dyf.toDF())
+    df = app.execute_query(glue_context, dyf.toDF())
     df.show()
     df.printSchema()
 
 
-def test_run(glue_context):
-    dyf = sample.read_csv(
-        glue_context, "s3://test-bucket/examples/us-legislators/all/tokyo.csv"
-    )
-    sample.write_parquet(dyf.toDF(), "s3://test-bucket/examples/parquet")
-    # sample.write_parquet(glue_context, dyf, "file:///home/glue_user/workspace/data")
+def test_run(glue_context: GlueContext) -> None:
+    dyf = app.read_csv(glue_context, "s3://test-bucket/data/person.csv")
+    app.write_parquet(glue_context, dyf.toDF(), "s3://test-bucket/parquet")

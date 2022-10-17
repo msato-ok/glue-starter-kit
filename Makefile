@@ -29,15 +29,15 @@ lint: ## Runs black, isort, bandit, flake8 in check mode
 	poetry run black --check .
 	poetry run isort --check .
 	poetry run bandit -r src
-	poetry run flake8 --config=setup.cfg src tests
-	poetry run mypy --config=setup.cfg .
+	poetry run flake8 --config=.config/flake8 src tests
+	poetry run mypy --config=.config/mypy .
 
 format: ## Formats you code with Black
 	poetry run isort .
 	poetry run black .
 
-test: hidden ## run pytest with coverage
-	poetry run pytest -v --cov glue_starter_kit
+test: hidden ## run pytest
+	sudo docker exec -it glue /home/glue_user/.local/bin/pytest -vs tests/
 
 build: install lint test ## run `poetry build` to build source distribution and wheel
 	poetry build
@@ -46,8 +46,6 @@ bumpversion: build ## bumpversion
 	poetry run bump2version --tag --current-version $$(git describe --tags --abbrev=0) --tag-name '{new_version}' patch
 	git push
 	git push --tags
-jupyter: ## run the jupyter-lab server
-	poetry run jupyter-lab
 
-run: ## run `poetry run glue-starter-kit`
-	poetry run glue-starter-kit
+submit: ## run `glue-spark-submit src/sample.py`
+	sudo docker exec -it glue /home/glue_user/spark/bin/spark-submit src/sample.py
