@@ -38,7 +38,8 @@ services:
       - "4040:4040"
       - "8888:8888"
       - "18080:18080"
-    command: /home/glue_user/jupyter/jupyter_start.sh
+    command: /usr/bin/bash -c "while sleep 1000; do :; done"
+    # command: /home/glue_user/jupyter/jupyter_start.sh
     networks:
       - glue_network
 

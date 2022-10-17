@@ -24,6 +24,8 @@ python = "^3.7"
 PyYAML = "^6.0"
 pyspark = "^3.3.0"
 aws-glue-libs = {path = "/opt/aws-glue-libs/"}
+# AWS Glue で提供済みの Python モジュールは以下で参照する
+# https://docs.aws.amazon.com/ja_jp/glue/latest/dg/aws-glue-programming-python-libraries.html
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.6.2"

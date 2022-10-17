@@ -6,7 +6,7 @@ from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
 from pyspark.sql import SparkSession
 
-from src.glue_starter_kit import app
+from src import app
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -16,13 +16,12 @@ def glue_context() -> GlueContext:
 
     args = getResolvedOptions(sys.argv, ["JOB_NAME"])
     sc = SparkSession.builder.getOrCreate()
-    sc._jsc.hadoopConfiguration().set("fs.s3a.endpoint", "http://localstack:4566")
-    sc._jsc.hadoopConfiguration().set("fs.s3a.path.style.access", "true")
-    sc._jsc.hadoopConfiguration().set("fs.s3a.signing-algorithm", "S3SignerType")
-    sc._jsc.hadoopConfiguration().set("fs.s3a.change.detection.mode", "None")
-    sc._jsc.hadoopConfiguration().set(
-        "fs.s3a.change.detection.version.required", "false"
-    )
+    hc = sc._jsc.hadoopConfiguration()
+    hc.set("fs.s3a.endpoint", "http://localstack:4566")
+    hc.set("fs.s3a.path.style.access", "true")
+    hc.set("fs.s3a.signing-algorithm", "S3SignerType")
+    hc.set("fs.s3a.change.detection.mode", "None")
+    hc.set("fs.s3a.change.detection.version.required", "false")
     context = GlueContext(sc)
     job = Job(context)
     job.init(args["JOB_NAME"], args)
