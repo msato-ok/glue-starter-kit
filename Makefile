@@ -85,7 +85,7 @@ skeleton: ## Outputs a skeleton of the JSON definition of a glue job
 deploy: build ## Deploy a glue job
 	aws s3 cp --recursive dist/ $(S3_GLUE_SCRIPT_PATH)/
 	aws glue delete-job --job-name $(GLUE_JOB_NAME)
-	aws glue create-job --cli-input-json file://$(GLUE_JOB_JSON)
+	aws glue create-job --cli-input-json file://./$(GLUE_JOB_JSON)
 
 start-job-run:
 	aws glue start-job-run \

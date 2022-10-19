@@ -1,0 +1,25 @@
+{
+    "Name": "glue_starter_kit",
+    "Description": "",
+    "LogUri": "",
+    "Role": "GlueS3Role",
+    "ExecutionProperty": {
+        "MaxConcurrentRuns": 1
+    },
+    "Command": {
+        "Name": "glueetl",
+        "ScriptLocation": "s3://test-bucket/glue/scripts/app.py",
+        "PythonVersion": "3"
+    },
+    "DefaultArguments": {
+        "--TempDir": "s3://test-bucket/glue/tmp",
+        "--extra-py-files": "s3://test-bucket/glue/scripts/lib.zip",
+        "--job-bookmark-option": "job-bookmark-disable",
+        "--job-language": "python",
+        "--enable-spark-ui": "true",
+        "--spark-event-logs-path": "s3://test-bucket/glue/logs"
+    },
+    "Timeout": 2880,
+    "MaxCapacity": 5.0,
+    "GlueVersion": "3.0"
+}
