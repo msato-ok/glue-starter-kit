@@ -1,7 +1,7 @@
 from typing import List
 
 """
-AWS Glue Local Kit
+Glue Starter Kit
 """
 __author__ = "Madoka Sato <msato@altus5.com>"
 __version__ = "0.0.1"

@@ -26,6 +26,7 @@ glue-spark-shell      # spark-shell を起動（Scala）
 gluepyspark           # pyspark を実行（Python）
 glue-spark-submit     # spark-submit を実行
 gluepytest            # pytest を実行
+start-history-server  # spark history server を起動
 ```
 
 ### make

@@ -5,6 +5,8 @@
 .DEFAULT_GOAL := help
 .PHONY: test help
 
+GLUE_CONTAINER := glue-starter-kit-glue
+
 S3_BUCKET := s3://test-bucket
 S3_TEST_DATA_PATH := $(S3_BUCKET)/testdata
 S3_GLUE_ROOT := $(S3_BUCKET)/glue
@@ -50,7 +52,7 @@ format: ## Formats you code with Black
 	poetry run black .
 
 test: hidden ## run pytest
-	sudo docker exec -it glue /home/glue_user/.local/bin/pytest -vs tests/
+	sudo docker exec -it $(GLUE_CONTAINER) /home/glue_user/.local/bin/pytest -vs tests/
 
 build: install lint test ## Create package for glue job
 	mkdir -p dist
@@ -64,7 +66,7 @@ bumpversion: build ## bumpversion
 	git push --tags
 
 local-submit: build ## run `glue-spark-submit`
-	sudo docker exec -it glue /home/glue_user/spark/bin/spark-submit dist/$(SRC_GLUE_MAIN) \
+	sudo docker exec -it $(GLUE_CONTAINER) /home/glue_user/spark/bin/spark-submit dist/$(SRC_GLUE_MAIN) \
 	    --py-files dist/$(SRC_GLUE_LIBZIP) \
 	    --JOB_NAME='dummy' \
 		--PARAM1=$(JOB_PARAM1)

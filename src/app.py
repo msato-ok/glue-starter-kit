@@ -38,9 +38,9 @@ class GluePythonSample:
         self.job.init(jobname, args)
 
     def run(self) -> None:
-        dyf = read_csv(self.context, "s3://test-bucket/data/person.csv")
+        dyf = read_csv(self.context, "s3://test-bucket/testdata/person.csv")
         df = execute_query(self.context, dyf.toDF())
-        write_parquet(self.context, df, "s3://test-bucket/parquet44")
+        write_parquet(self.context, df, "s3://test-bucket/parquet")
 
         self.job.commit()
 
@@ -60,9 +60,11 @@ def read_csv(glue_context: GlueContext, path: str) -> DynamicFrame:
 
 def write_parquet(glue_context: GlueContext, df: DataFrame, path: str) -> None:
     print(f"write_parquet: {path}")
+    # parquetファイル分割しないで1ファイルで作成する場合は、アンコメントする
     # df = df.coalesce(1)
     (
         df.write.mode("overwrite").format("parquet")
+        # パーティショニングする場合はアンコメントしてカラムを指定する
         # .partitionBy("gender")
         .save(path)
     )

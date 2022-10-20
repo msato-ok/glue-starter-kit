@@ -32,13 +32,13 @@ def glue_context() -> GlueContext:
 
 
 def test_counts(glue_context: GlueContext) -> None:
-    dyf = app.read_csv(glue_context, "s3://test-bucket/data/person.csv")
+    dyf = app.read_csv(glue_context, "s3://test-bucket/testdata/person.csv")
     dyf.printSchema()
     assert dyf.toDF().count() == 100
 
 
 def test_execute_query(glue_context: GlueContext) -> None:
-    dyf = app.read_csv(glue_context, "s3://test-bucket/data/person.csv")
+    dyf = app.read_csv(glue_context, "s3://test-bucket/testdata/person.csv")
     dyf.printSchema()
     df = app.execute_query(glue_context, dyf.toDF())
     df.show()
@@ -46,5 +46,5 @@ def test_execute_query(glue_context: GlueContext) -> None:
 
 
 def test_run(glue_context: GlueContext) -> None:
-    dyf = app.read_csv(glue_context, "s3://test-bucket/data/person.csv")
+    dyf = app.read_csv(glue_context, "s3://test-bucket/testdata/person.csv")
     app.write_parquet(glue_context, dyf.toDF(), "s3://test-bucket/parquet")

@@ -1,0 +1,12 @@
+default_context:
+  email: msato@altus5.com
+  full_name: Madoka Sato
+  github_name: msato-ok
+  license: MIT
+  module_name: glue_starter_kit
+  project_slug: glue-starter-kit
+  s3_glue_root_path: glue
+  s3_test_bucket_name: test-bucket
+  s3_test_data_path: testdata
+  short_description: Glue Starter Kit
+  version: 0.0.1

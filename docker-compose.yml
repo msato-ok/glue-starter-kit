@@ -17,6 +17,8 @@ services:
     volumes:
       - .:/app:z
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - COOKIECUTTER_CONFIG=/app/.cookiecutter.yaml
     env_file:
       - ./.envs/.app
       - ./.envs/.aws
@@ -26,7 +28,7 @@ services:
 
   glue:
     image: amazon/aws-glue-libs:glue_libs_3.0.0_image_01
-    container_name: glue
+    container_name: glue-starter-kit-glue
     working_dir: /app
     volumes:
       - .:/app:z
@@ -38,14 +40,13 @@ services:
       - "4040:4040"
       - "8888:8888"
       - "18080:18080"
-    command: /usr/bin/bash -c "while sleep 1000; do :; done"
-    # command: /home/glue_user/jupyter/jupyter_start.sh
+    command: /home/glue_user/jupyter/jupyter_start.sh
     networks:
       - glue_network
 
   localstack:
     image: localstack/localstack:0.12.16
-    container_name: localstack
+    container_name: glue-starter-kit-localstack
     environment:
       - SERVICES=s3
       - DEBUG=1

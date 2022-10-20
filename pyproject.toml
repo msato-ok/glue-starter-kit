@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "glue-starter-kit"
 version = "0.0.1"
-description = "AWS Glue Local Kit"
+description = "Glue Starter Kit"
 authors = ["Madoka Sato <msato@altus5.com>"]
 # Use identifier from https://spdx.org/licenses/
 license = "MIT"
@@ -53,6 +53,7 @@ profile = "black"
 
 [tool.black]
 target-version = ['py37']
+line-length = 88
 
 [tool.pytest.ini_options]
 # Example
